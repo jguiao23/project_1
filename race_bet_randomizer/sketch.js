@@ -5,7 +5,7 @@ let winner = null;
 let raceStarted = false;
 let raceOver = false;
 let score=0;
-let name=["The Stallion", "The Ice Charger","Symbol","Bartholomew","The Speedster"]
+// let name=["The Stallion", "The Ice Charger","Symbol","Bartholomew","The Speedster"]
 // let car;
 
 function preload(){

@@ -1,16 +1,27 @@
 let carSkin = [];
 let cars = [];
 let playerChoice = null;   // which car the player picked
+let playerLost=false;
 let winner = null;         // which car actually won
 let raceStarted = false;
 let raceOver = false;
-let score=0;
+
 let restart=false;
 
 const CAR_W = 100;
 const CAR_H = 100;
 
+let score=-100;
+
+let bg;
+let r=200;
+let g=200;
+let b=200;
+let name=["The Stallion", "The Ice Charger","Symbol","Bartholomew","The Speedster"];
+let pixel
+
 function preload() {
+  pixel=loadFont("Pixel.ttf")
   carSkin.push(loadImage("BlueCar.png"));
   carSkin.push(loadImage("GreenCar.png"));
   carSkin.push(loadImage("WhiteCar.png"));
@@ -21,6 +32,8 @@ function setup() {
   let canvas= createCanvas(800, 400);
   canvas.parent("race");
   imageMode(CENTER);
+  bg= color(200,200,200);
+
 
   // spawn cars
   for (let i = 0; i < 3; i++) {
@@ -34,15 +47,22 @@ function setup() {
 }
 
 function draw() {
-  background(200);
+
+  background(bg);
+  textAlign(CENTER);
+  textFont(pixel);
+  textSize(10);
+  text("Your Cash: $"+score,700,40);
+  // text(score,760,40)
 
   // Draw finish line
   push();
+  textSize(10);
   stroke(0);
   strokeWeight(4)
   line(80, 0, 80, height);
   pop();
-  text("Finish", 10, 20);
+  text("Finish", 40, 20);
 
   let hovering = false; // track if mouse is over a car
 
@@ -75,20 +95,30 @@ function draw() {
   textSize(20);
 
   if (!raceStarted) {
-    text("Click a car to bet before the race starts!", 120, 40);
+    textAlign(CENTER);
+    textSize(15);
+    text("Click on a car to Bet before the race starts!", width/2.2, 40);
   } else if (raceOver) {
     if (playerChoice === winner) {
-      text("You win! 🏆", 220, 40);
+      textSize(15)
+      text("You win! Press 'SPACE' to restart", width/2, 40);
+      
     } else {
-      text("You lost! 😢", 220, 40);
+      textSize(15)
+      text("You lost! Press 'SPACE' to restart", width/2.2, 40);
+      playerLost=true;
+     
     }
   } else {
-    text("Race in progress...", 220, 40);
+    textAlign(CENTER);
+
+    text("Race in progress...", width/2, 40);
   }
 
   if (playerChoice !== null && !raceOver) {
-    textSize(16);
-    text("Your pick: Car " + (playerChoice + 1), 240, 70);
+    textSize(15);
+    textAlign(CENTER);
+    text("Your picked the: Car # " + (playerChoice + 1), width/2, 70);
   }
   
 }
@@ -112,9 +142,24 @@ function restartCars(){
   }
 }
 function keyPressed(){
-  if (raceOver && (key==="r")){
+  // if (raceOver && (key==="r")){
+  //   restartRace();
+  //   bg=200;
+  // }
+  if (raceOver && playerChoice===winner&&(key===" ")){
     restartRace();
+    bg=200;
+    score= score+int(random(1,1000))
   }
+  if(raceOver && playerLost===true&&(key===" ")){
+    restartRace();
+    bg=200;
+    score= score-int(random(1,1000))
+  }
+  if (key==="c"){
+    bg=color(random(255),random(255),random(255));
+  }
+  
 }
 
 
@@ -125,7 +170,6 @@ function mousePressed() {
     if (c.contains(mouseX, mouseY)) {
       playerChoice = c.id;
       raceStarted = true; // race begins once player picks
-      console.log("Picked car", c.id);
     }
   }
 }
