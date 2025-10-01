@@ -19,7 +19,7 @@ function preload() {
 
 function setup() {
   let canvas= createCanvas(800, 400);
-  canvas.parent('race');
+  canvas.parent("race");
   imageMode(CENTER);
 
   // spawn cars
